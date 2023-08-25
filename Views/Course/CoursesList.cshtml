@@ -1,0 +1,82 @@
+﻿@model IList<NewProjectEF.BusinessEntities.Course>
+@{
+    Layout = "_Layout";
+}
+
+<div class="container-fluid">
+    <div class="row">
+        <h2>Courses List <a href="@Url.Action("CourseEditor","Course")" style="float:right;" class="btn btn-primary">Add Course</a></h2>
+        <table class="table table striped table-bordered" id="CoursesList" style="margin-top:20px">
+            <thead>
+                <tr>
+                    <th>CourseTitle</th>
+                    <th>DurationInDays</th>
+                    <th>Price</th>
+                    <th></th>
+                    <th></th>
+
+                </tr>
+            </thead>
+            <tbody>
+                    @foreach (var course in Model)
+                    {
+                        <tr>
+                            <td>
+                                @course.CourseTitle
+                            </td>
+                            <td>
+                                @course.Price
+                            </td>
+                            <td>
+                                @course.DurationInDays
+                            </td>
+                            
+                            <td>
+                                <a href="@Url.Action("CourseRO","Course",new{CourseId = course.CourseId})">View</a> |
+                                <a href="@Url.Action("EditCourse","Course",new{CourseId = course.CourseId})">Edit</a> |
+                                <a href="#" onclick="deletecourse(@course.CourseId)">Delete</a>
+                            </td>
+                        </tr>
+                    }
+            </tbody>
+        </table>
+    </div>
+</div>
+
+<script type="text/javascript">
+    function deleteCouse(CourseId) {
+
+        var deleteCourseUrl = "https://localhost:7217/Course/DeleteCourse";
+
+        var deleteCourseData = { CourseId: CourseId };
+
+        // Send the JSON data using $.post()
+        $.post(deleteCourseUrl, deleteCourseData,
+            function (response) {
+
+                // Success callback
+                $("#CoursesList").find("#" + CourseId).remove();
+
+            }, 'json')
+            .fail(function (xhr, status, error) {
+                // Error callback
+                console.error('Error:', error);
+            });
+
+        //$.post({
+        //    url: deleteCourseUrl,
+        //    data: deleteCourseData, // Convert the JavaScript object to a JSON string
+        //    contentType: 'application/json', // Set the content type to indicate JSON data
+        //    dataType: 'json', // Expected data type of the response from the server
+        //    success: function (response) {
+        //        // This function will be executed when the server responds successfully
+        //        $("#CoursesList").find("#" + CourseId).remove();
+        //    },
+        //    error: function (xhr, status, error) {
+
+        //        // This function will be executed if an error occurs during the request
+        //        //console.error('Error:', error);
+        //    }
+        //});
+    }
+</script>
